@@ -1,0 +1,160 @@
+{
+  "train/good": {
+    "count": 291,
+    "resolutions": {
+      "1400x1900": 291
+    },
+    "modes": {
+      "L": 291
+    },
+    "variants": {
+      "regular": 291
+    },
+    "size_min_kb": 742.0205078125,
+    "size_max_kb": 1057.5712890625,
+    "size_mean_kb": 772.5234039411512,
+    "sample_paths": [
+      "E:\\CODING\\VIGIL\\dataset\\train\\good\\000_regular.png",
+      "E:\\CODING\\VIGIL\\dataset\\train\\good\\145_regular.png",
+      "E:\\CODING\\VIGIL\\dataset\\train\\good\\290_regular.png"
+    ]
+  },
+  "validation/good": {
+    "count": 41,
+    "resolutions": {
+      "1400x1900": 41
+    },
+    "modes": {
+      "L": 41
+    },
+    "variants": {
+      "regular": 41
+    },
+    "size_min_kb": 745.9013671875,
+    "size_max_kb": 1022.6923828125,
+    "size_mean_kb": 775.2867520960366,
+    "sample_paths": [
+      "E:\\CODING\\VIGIL\\dataset\\validation\\good\\000_regular.png",
+      "E:\\CODING\\VIGIL\\dataset\\validation\\good\\020_regular.png",
+      "E:\\CODING\\VIGIL\\dataset\\validation\\good\\040_regular.png"
+    ]
+  },
+  "test_public/good": {
+    "count": 35,
+    "resolutions": {
+      "1400x1900": 35
+    },
+    "modes": {
+      "L": 35
+    },
+    "variants": {
+      "overexposed": 5,
+      "regular": 5,
+      "shift_1": 5,
+      "shift_2": 5,
+      "shift_3": 5,
+      "shift_4": 5,
+      "underexposed": 5
+    },
+    "size_min_kb": 388.1142578125,
+    "size_max_kb": 1243.892578125,
+    "size_mean_kb": 788.0025390625,
+    "sample_paths": [
+      "E:\\CODING\\VIGIL\\dataset\\test_public\\good\\000_overexposed.png",
+      "E:\\CODING\\VIGIL\\dataset\\test_public\\good\\002_shift_2.png",
+      "E:\\CODING\\VIGIL\\dataset\\test_public\\good\\004_underexposed.png"
+    ]
+  },
+  "test_public/bad": {
+    "count": 105,
+    "resolutions": {
+      "1400x1900": 105
+    },
+    "modes": {
+      "L": 105
+    },
+    "variants": {
+      "overexposed": 15,
+      "regular": 15,
+      "shift_1": 15,
+      "shift_2": 15,
+      "shift_3": 15,
+      "shift_4": 15,
+      "underexposed": 15
+    },
+    "size_min_kb": 381.88671875,
+    "size_max_kb": 1264.369140625,
+    "size_mean_kb": 777.416759672619,
+    "sample_paths": [
+      "E:\\CODING\\VIGIL\\dataset\\test_public\\bad\\000_overexposed.png",
+      "E:\\CODING\\VIGIL\\dataset\\test_public\\bad\\007_shift_2.png",
+      "E:\\CODING\\VIGIL\\dataset\\test_public\\bad\\014_underexposed.png"
+    ]
+  },
+  "test_public/ground_truth/bad": {
+    "count": 105,
+    "resolutions": {
+      "1400x1900": 105
+    },
+    "modes": {
+      "L": 105
+    },
+    "variants": {
+      "overexposed": 15,
+      "regular": 15,
+      "shift_1": 15,
+      "shift_2": 15,
+      "shift_3": 15,
+      "shift_4": 15,
+      "underexposed": 15
+    },
+    "size_min_kb": 3.193359375,
+    "size_max_kb": 6.0029296875,
+    "size_mean_kb": 4.252278645833333,
+    "sample_paths": [
+      "E:\\CODING\\VIGIL\\dataset\\test_public\\ground_truth\\bad\\000_overexposed_mask.png",
+      "E:\\CODING\\VIGIL\\dataset\\test_public\\ground_truth\\bad\\007_shift_2_mask.png",
+      "E:\\CODING\\VIGIL\\dataset\\test_public\\ground_truth\\bad\\014_underexposed_mask.png"
+    ]
+  },
+  "test_private": {
+    "count": 276,
+    "resolutions": {
+      "1400x1900": 276
+    },
+    "modes": {
+      "L": 276
+    },
+    "variants": {
+      "regular": 276
+    },
+    "size_min_kb": 737.236328125,
+    "size_max_kb": 1116.849609375,
+    "size_mean_kb": 780.7531136775362,
+    "sample_paths": [
+      "E:\\CODING\\VIGIL\\dataset\\test_private\\000_regular.png",
+      "E:\\CODING\\VIGIL\\dataset\\test_private\\138_regular.png",
+      "E:\\CODING\\VIGIL\\dataset\\test_private\\275_regular.png"
+    ]
+  },
+  "test_private_mixed": {
+    "count": 276,
+    "resolutions": {
+      "1400x1900": 276
+    },
+    "modes": {
+      "L": 276
+    },
+    "variants": {
+      "mixed": 276
+    },
+    "size_min_kb": 381.41796875,
+    "size_max_kb": 1267.2265625,
+    "size_mean_kb": 765.4523642719656,
+    "sample_paths": [
+      "E:\\CODING\\VIGIL\\dataset\\test_private_mixed\\000_mixed.png",
+      "E:\\CODING\\VIGIL\\dataset\\test_private_mixed\\138_mixed.png",
+      "E:\\CODING\\VIGIL\\dataset\\test_private_mixed\\275_mixed.png"
+    ]
+  }
+}
