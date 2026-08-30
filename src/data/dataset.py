@@ -75,3 +75,98 @@ class MVTecVialDataset(Dataset):
             mask = self.target_transform(mask)
             
         return image, label, mask
+
+from dataclasses import dataclass
+from pathlib import Path
+from typing import List, Optional
+import numpy as np
+from PIL import Image
+
+@dataclass
+class ImageSample:
+    path: Path
+    mask_path: Optional[Path]
+    is_anomalous: bool
+    variant: str
+    index: str
+    
+    @property
+    def label(self):
+        return "bad" if self.is_anomalous else "good"
+        
+    def load_image(self, mode="RGB"):
+        return np.array(Image.open(self.path).convert(mode))
+        
+    def load_mask(self):
+        if not self.mask_path or not self.mask_path.exists():
+            return None
+        return np.array(Image.open(self.mask_path).convert("L"))
+
+class MVTecAD2VialDataset:
+    def __init__(self, root: str = None):
+        self.root = Path(root) if root else Path("dataset")
+        self._samples = {
+            "train": [],
+            "validation": [],
+            "test_good": [],
+            "test_bad": [],
+            "test_private": [],
+            "test_private_mixed": []
+        }
+        
+    def get_split(self, split: str) -> List[ImageSample]:
+        samples = []
+        if split == "train":
+            good_dir = self.root / "train" / "good"
+            if good_dir.exists():
+                for p in good_dir.glob("*.png"):
+                    samples.append(ImageSample(
+                        path=p,
+                        mask_path=None,
+                        is_anomalous=False,
+                        variant="regular",
+                        index=p.stem
+                    ))
+        elif split == "validation":
+            good_dir = self.root / "validation" / "good"
+            if good_dir.exists():
+                for p in good_dir.glob("*.png"):
+                    samples.append(ImageSample(
+                        path=p,
+                        mask_path=None,
+                        is_anomalous=False,
+                        variant="regular",
+                        index=p.stem
+                    ))
+        elif split == "test_good":
+            good_dir = self.root / "test_public" / "good"
+            if good_dir.exists():
+                for p in good_dir.glob("*.png"):
+                    samples.append(ImageSample(
+                        path=p,
+                        mask_path=None,
+                        is_anomalous=False,
+                        variant="regular",
+                        index=p.stem
+                    ))
+        elif split == "test_bad":
+            bad_dir = self.root / "test_public" / "bad"
+            if bad_dir.exists():
+                for p in bad_dir.glob("*.png"):
+                    parts = p.stem.split('_', 1)
+                    variant = parts[1] if len(parts) > 1 else "regular"
+                    mask_name = f"{p.stem}_mask.png"
+                    samples.append(ImageSample(
+                        path=p,
+                        mask_path=self.root / "test_public" / "ground_truth" / "bad" / mask_name,
+                        is_anomalous=True,
+                        variant=variant,
+                        index=p.stem
+                    ))
+        return samples
+
+    def filter_by_variant(self, samples: List[ImageSample], variant: str) -> List[ImageSample]:
+        return [s for s in samples if s.variant == variant]
+        
+    def validate_integrity(self):
+        return {"errors": [], "warnings": []}

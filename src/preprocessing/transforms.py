@@ -15,3 +15,15 @@ def get_transforms(image_size=(256, 256)):
     ])
     
     return transform, target_transform
+
+def get_transform(resize=(256, 256)):
+    return T.Compose([
+        T.Resize(resize),
+        T.ToTensor(),
+    ])
+
+def get_mask_transform(resize=(256, 256)):
+    return T.Compose([
+        T.Resize(resize, interpolation=T.InterpolationMode.NEAREST),
+        T.ToTensor()
+    ])
