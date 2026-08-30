@@ -217,10 +217,7 @@ class PatchCore:
         return all_patches, feature_map_shape
 
     def _coreset_subsample(self, patches: torch.Tensor) -> torch.Tensor:
-        """Subsample patches.
-        
-        Since farthest-point sampling is too slow on CPU for 300k patches,
-        we use simple random subsampling which is instantaneous.
+        """Subsample patches using Greedy Coreset Selection (Farthest Point Sampling).
         
         Args:
             patches: Tensor of shape (N, C).
@@ -236,12 +233,32 @@ class PatchCore:
             return patches
 
         logger.info(
-            "  Random subsampling: %d -> %d patches (%.1f%%)",
+            "  Farthest Point Sampling: %d -> %d patches (%.1f%%)",
             n_total, n_select, self.coreset_sampling_ratio * 100,
         )
-
-        indices = torch.randperm(n_total)[:n_select]
-        return patches[indices]
+        
+        device = patches.device
+        
+        # Start with a random index
+        coreset_idx = [torch.randint(0, n_total, (1,)).item()]
+        
+        # Keep track of the minimum distance from each point to the selected coreset points
+        # Initial distances from all points to the first selected point
+        min_distances = torch.cdist(patches, patches[coreset_idx[0]:coreset_idx[0]+1]).squeeze()
+        
+        for i in range(1, n_select):
+            if i % 100 == 0:
+                logger.info("    Selected %d/%d points...", i, n_select)
+                
+            # Select the point that has the maximum minimum distance to the coreset
+            max_idx = torch.argmax(min_distances).item()
+            coreset_idx.append(max_idx)
+            
+            # Update min distances for the next iteration
+            new_dist = torch.cdist(patches, patches[max_idx:max_idx+1]).squeeze()
+            min_distances = torch.minimum(min_distances, new_dist)
+            
+        return patches[coreset_idx]
 
     @staticmethod
     def _chunked_distances(
