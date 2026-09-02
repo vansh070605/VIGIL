@@ -1,65 +1,78 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
+import ImageUploader from './components/ImageUploader';
+import InspectionResults from './components/InspectionResults';
 import './index.css';
 
 function App() {
-  const [results, setResults] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [originalImage, setOriginalImage] = useState(null);
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetch('http://localhost:8000/experiments/patchcore_baseline/results.json')
-      .then(res => res.json())
-      .then(data => setResults(data))
-      .catch(err => console.error("Error fetching results:", err));
-  }, []);
+  const handleImageUpload = async (file, previewUrl) => {
+    setIsLoading(true);
+    setError(null);
+    setOriginalImage(previewUrl);
+    setResult(null);
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('http://localhost:8000/predict', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      setResult(data);
+    } catch (err) {
+      console.error("Failed to inspect image:", err);
+      setError("Failed to connect to the inspection server. Ensure the backend API is running.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleReset = () => {
+    setOriginalImage(null);
+    setResult(null);
+    setError(null);
+  };
 
   return (
-    <div className="app-container">
+    <>
       <header className="header">
         <h1>VIGIL</h1>
-        <p>Anomaly Detection Dashboard</p>
+        <p>Visual Inspection & Guided Intelligence Layer</p>
       </header>
 
-      {results ? (
-        <>
-          <div className="dashboard-grid">
-            <div className="glass-panel metric-card">
-              <h3>Image AUROC</h3>
-              <div className="value">{(results.image_auroc * 100).toFixed(2)}<span>%</span></div>
-            </div>
-            <div className="glass-panel metric-card">
-              <h3>Pixel AUROC</h3>
-              <div className="value">{(results.pixel_auroc * 100).toFixed(2)}<span>%</span></div>
-            </div>
-            <div className="glass-panel metric-card">
-              <h3>PRO (Per-Region Overlap)</h3>
-              <div className="value">{(results.pixel_pro * 100).toFixed(2)}<span>%</span></div>
-            </div>
+      <main>
+        {error && (
+          <div style={{
+            background: 'rgba(239, 68, 68, 0.1)',
+            border: '1px solid var(--danger)',
+            color: '#fca5a5',
+            padding: '1rem',
+            borderRadius: '8px',
+            marginBottom: '2rem',
+            textAlign: 'center'
+          }}>
+            {error}
           </div>
+        )}
 
-          <section className="gallery-section glass-panel">
-            <h2>Visualizations & Analytics</h2>
-            <div className="gallery-grid">
-              {[
-                { id: 'roc_curve_image', title: 'ROC Curve' },
-                { id: 'score_distribution', title: 'Score Distribution' },
-                { id: 'per_variant_auroc', title: 'AUROC per Variant' },
-                { id: 'anomaly_maps_bad', title: 'Sample Anomaly Maps' }
-              ].map((img) => (
-                <div key={img.id} className="gallery-item">
-                  <img 
-                    src={`http://localhost:8000/experiments/patchcore_baseline/visualizations/${img.id}.png`} 
-                    alt={img.title} 
-                    onError={(e) => { e.target.style.display = 'none'; }}
-                  />
-                  <div className="label">{img.title}</div>
-                </div>
-              ))}
-            </div>
-          </section>
-        </>
-      ) : (
-        <div style={{textAlign: 'center', marginTop: '50px', fontSize: '1.2rem', color: '#94a3b8'}}>Loading results...</div>
-      )}
-    </div>
+        {!result ? (
+          <ImageUploader onImageUpload={handleImageUpload} isLoading={isLoading} />
+        ) : (
+          <InspectionResults result={result} originalImage={originalImage} onReset={handleReset} />
+        )}
+      </main>
+    </>
   );
 }
 
