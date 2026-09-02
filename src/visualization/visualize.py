@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 
-from ..data.dataset import ImageSample
+from data.dataset import ImageSample
 
 
 def plot_samples_grid(
