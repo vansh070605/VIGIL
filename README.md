@@ -63,3 +63,4 @@ This project treats the task as **unsupervised anomaly detection with pixel-leve
 ## License
 
 Dataset: MVTec AD 2 — see [MVTec website](https://www.mvtec.com/company/research/datasets/mvtec-ad-2) for terms.
+# Pair Extraordinaire Test
